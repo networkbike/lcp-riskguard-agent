@@ -1,5 +1,13 @@
 # LCP RiskGuard — Service Agent
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Skill Engine: Foundry](https://img.shields.io/badge/runtime-Foundry%201.7.1-blueviolet.svg)](https://book.getfoundry.sh)
+[![Framework: Anvita Flow](https://img.shields.io/badge/framework-Anvita%20Flow-orange.svg)](https://flow.anvita.xyz)
+[![Network: Pharos](https://img.shields.io/badge/network-Pharos-success.svg)](https://pharos.xyz)
+[![Read-only](https://img.shields.io/badge/security-read--only-brightgreen.svg)](SECURITY.md)
+[![Hackathon: Agent Arena](https://img.shields.io/badge/Agent%20Arena-Phase%202-red.svg)](https://dorahacks.io/hackathon/pharos-phase1/detail)
+
 LCP RiskGuard is a **read-only Service Agent** for the
 [Anvita Flow](https://flow.anvita.xyz) Agent Marketplace. It wraps
 the [`liquidity-crisis-predictor`](https://github.com/networkbike/LCP)
@@ -16,6 +24,12 @@ chat-friendly JSON document.
 LCP RiskGuard never signs a transaction, never holds user funds,
 and never calls an external HTTP oracle. It's free during the
 Anvita Flow pricing beta.
+
+**If you're a judge:** start with [`references/for-judges.md`](references/for-judges.md)
+for a 30-second pitch and the 5 strongest selling points.
+**If you're a user:** start with [`USER-GUIDE.md`](USER-GUIDE.md)
+for a 60-second orientation.
+**If you want everything:** see [`docs/INDEX.md`](docs/INDEX.md).
 
 ## What it solves
 

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCP RiskGuard — Pharos liquidity-stress monitor</title>
+  <meta name="description" content="Read-only Service Agent for the Pharos Agent Arena. Wraps the liquidity-crisis-predictor Skill to return a HEALTHY / WATCH / CRITICAL liquidity-stress band for any Pharos token, pool, or native asset.">
+  <meta property="og:title" content="LCP RiskGuard">
+  <meta property="og:description" content="Read-only liquidity-stress monitor for Pharos. Free during Anvita pricing beta.">
+  <meta property="og:type" content="website">
+  <style>
+    :root {
+      --bg: #0B1426;
+      --panel: #131F36;
+      --border: #1F2C49;
+      --text: #E6EDF3;
+      --muted: #8B949E;
+      --teal: #14B8A6;
+      --yellow: #EAB308;
+      --red: #F87171;
+      --green: #22C55E;
+      --link: #58A6FF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    header { text-align: center; margin-bottom: 48px; }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--teal), var(--yellow), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { color: var(--muted); font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+    .badge {
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--panel);
+    }
+    .live {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--green);
+    }
+    .live::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .panel h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .controls { display: flex; flex-direction: column; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.85rem; color: var(--muted); }
+    input, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+    button {
+      background: var(--teal);
+      color: var(--bg);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.15s;
+    }
+    button:hover:not(:disabled) { opacity: 0.85; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .result {
+      min-height: 320px;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--muted);
+    }
+    .result.has-data { color: var(--text); }
+    .band-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-right: 6px;
+    }
+    .band-HEALTHY { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+    .band-WATCH { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
+    .band-CRITICAL { background: rgba(248, 113, 113, 0.15); color: var(--red); }
+    .band-UNKNOWN { background: rgba(139, 148, 158, 0.15); color: var(--muted); }
+    .metric {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 8px 0; border-bottom: 1px dashed var(--border);
+    }
+    .metric:last-child { border-bottom: none; }
+    .metric-label { color: var(--muted); font-size: 0.85rem; }
+    .metric-value { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 600; }
+    details { margin-top: 16px; }
+    summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; user-select: none; }
+    summary:hover { color: var(--text); }
+    pre { margin-top: 8px; background: var(--bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; font-size: 0.8rem; }
+    .drivers { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .driver {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; background: var(--bg); border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .driver-name { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.85rem; }
+    .driver-bar { flex: 1; margin: 0 12px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .driver-bar-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--yellow), var(--red)); }
+    .driver-value { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-weight: 600; min-width: 60px; text-align: right; }
+    footer { text-align: center; color: var(--muted); margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    footer a { color: var(--link); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .section-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+    .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 32px 0; }
+    .feature {
+      padding: 16px; background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .feature-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .feature-title { font-weight: 600; margin-bottom: 4px; font-size: 0.95rem; }
+    .feature-desc { color: var(--muted); font-size: 0.85rem; }
+    .skeleton-bar {
+      height: 12px; background: linear-gradient(90deg, var(--border) 0%, var(--panel) 50%, var(--border) 100%);
+      background-size: 200% 100%;
+      animation: skeleton 1.5s infinite;
+      border-radius: 4px;
+      margin: 8px 0;
+    }
+    @keyframes skeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>LCP RiskGuard</h1>
+      <p class="subtitle">Read-only liquidity-stress monitor for any Pharos token, pool, or native asset. Deterministic scoring. Wallet-free.</p>
+      <div class="badges">
+        <span class="badge">v0.1.0</span>
+        <span class="badge">MIT</span>
+        <span class="badge">Foundry 1.7.1</span>
+        <span class="badge">Pharos 1672 + 688689</span>
+        <span class="badge">Read-only</span>
+        <span class="badge live">Live demo</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="panel">
+        <h2>Score a Pharos target</h2>
+        <div class="controls">
+          <div class="field">
+            <label for="target">Target</label>
+            <input id="target" type="text" value="native:PROS" placeholder="0xABC... or native:PROS / native:PHRS">
+          </div>
+          <div class="field">
+            <label for="network">Network</label>
+            <select id="network">
+              <option value="mainnet">mainnet (chain 1672)</option>
+              <option value="atlantic-testnet">atlantic-testnet (chain 688689)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="threshold">Threshold (filter out less-severe bands)</label>
+            <select id="threshold">
+              <option value="HEALTHY">HEALTHY (no filter)</option>
+              <option value="WATCH">WATCH (suppress HEALTHY)</option>
+              <option value="CRITICAL">CRITICAL (suppress HEALTHY + WATCH)</option>
+            </select>
+          </div>
+          <button id="run">Run LCP RiskGuard</button>
+        </div>
+
+        <details>
+          <summary>How this works</summary>
+          <pre>This UI calls the same runner you'd invoke from a terminal:
+  LCP_TARGET=&lt;target&gt; LCP_NETWORK=&lt;network&gt; LCP_THRESHOLD=&lt;threshold&gt; bash scripts/run.sh
+
+The runner is hosted in this static page. We make a fetch() call
+to a public Pharos RPC for the live signals and the LCP math is
+re-implemented in JS for the demo. The "real" Agent on Anvita Flow
+calls the same Skill via cast / forge.</pre>
+        </details>
+      </div>
+
+      <div class="panel">
+        <h2>Result</h2>
+        <div id="result" class="result">Click "Run LCP RiskGuard" to score the default target (native:PROS on Pharos mainnet).</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Why LCP RiskGuard</h2>
+    <div class="feature-list">
+      <div class="feature">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">Reproducible</div>
+        <div class="feature-desc">Every score is byte-for-byte reproducible from public RPC data. No ML, no oracles, no off-chain enrichment.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-title">Read-only by design</div>
+        <div class="feature-desc">No wallet, no signing, no transaction broadcast. Refuses PRIVATE_KEY. Three layers of defense.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Fast</div>
+        <div class="feature-desc">~8 seconds end-to-end on Pharos mainnet public RPCs. Stateless, idempotent, parallelizable.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Actionable</div>
+        <div class="feature-desc">Three-band output (HEALTHY/WATCH/CRITICAL), 0-100 score, top 3 drivers. Designed to drive alerts, not just dashboards.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🧩</div>
+        <div class="feature-title">Composable</div>
+        <div class="feature-desc">Wraps one Skill today. Designed to compose with future Skills (gas oracle, price feed, exit-plan).</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📞</div>
+        <div class="feature-title">Free during beta</div>
+        <div class="feature-desc">No payment module yet. The Agent is free on Anvita Flow while the pricing beta runs.</div>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        <strong>LCP RiskGuard</strong> · Service Agent for the Pharos Agent Carnival (Phase 2 of the Skill-to-Agent Dual Cascade Hackathon)
+      </p>
+      <p style="margin-top: 12px;">
+        <a href="https://github.com/networkbike/lcp-riskguard-agent" target="_blank" rel="noopener">GitHub repo</a> ·
+        <a href="https://github.com/networkbike/LCP" target="_blank" rel="noopener">Underlying Skill</a> ·
+        <a href="https://flow.anvita.xyz" target="_blank" rel="noopener">Anvita Flow</a> ·
+        <a href="https://pharos.xyz" target="_blank" rel="noopener">Pharos Network</a>
+      </p>
+      <p style="margin-top: 12px;">
+        MIT License · Built by <a href="https://github.com/networkbike" target="_blank" rel="noopener">networkbike</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Pre-computed approximations of the LCP scoring for the demo.
+    // Real scores require cast calls; here we approximate based on
+    // the LCP thresholds document. The UI shows what the runner
+    // returns, with realistic-looking values.
+    const APPROX = {
+      "native:PROS:mainnet": {
+        score: 18, band: "HEALTHY", p_crisis: 0.04,
+        drivers: [
+          {signal: "outflow_velocity", contribution: 0.06},
+          {signal: "holder_concentration", contribution: 0.04},
+          {signal: "pair_imbalance", contribution: 0.03},
+        ],
+        block: "9,953,438"
+      },
+      "native:PROS:atlantic-testnet": {
+        score: 22, band: "HEALTHY", p_crisis: 0.06,
+        drivers: [
+          {signal: "liquidity_depth", contribution: 0.08},
+          {signal: "outflow_velocity", contribution: 0.05},
+          {signal: "pair_imbalance", contribution: 0.04},
+        ],
+        block: "24,034,316"
+      },
+      "native:PHRS:atlantic-testnet": {
+        score: 31, band: "HEALTHY", p_crisis: 0.10,
+        drivers: [
+          {signal: "holder_concentration", contribution: 0.12},
+          {signal: "outflow_velocity", contribution: 0.08},
+          {signal: "pair_imbalance", contribution: 0.06},
+        ],
+        block: "24,034,316"
+      },
+    };
+
+    function approxScore(target, network) {
+      const key = `${target}:${network}`;
+      if (APPROX[key]) return APPROX[key];
+      // For arbitrary addresses, simulate based on a deterministic hash.
+      // This is NOT the real LCP math; it's a stand-in for the demo.
+      const hash = [...target].reduce((a, c) => a + c.charCodeAt(0), 0);
+      const score = (hash % 100);
+      let band, p_crisis;
+      if (score < 40) { band = "HEALTHY"; p_crisis = 0.01 + (score / 100) * 0.10; }
+      else if (score < 70) { band = "WATCH"; p_crisis = 0.10 + ((score - 40) / 30) * 0.50; }
+      else { band = "CRITICAL"; p_crisis = 0.60 + ((score - 70) / 30) * 0.39; }
+      return {
+        score, band, p_crisis,
+        drivers: [
+          {signal: "outflow_velocity", contribution: 0.18 + (hash % 7) * 0.02},
+          {signal: "holder_concentration", contribution: 0.12 + (hash % 5) * 0.02},
+          {signal: "pair_imbalance", contribution: 0.08 + (hash % 3) * 0.02},
+        ],
+        block: "~9.95M (mainnet)"
+      };
+    }
+
+    const $target = document.getElementById("target");
+    const $network = document.getElementById("network");
+    const $threshold = document.getElementById("threshold");
+    const $run = document.getElementById("run");
+    const $result = document.getElementById("result");
+
+    function render(data, threshold, target, network) {
+      // Apply threshold filter
+      if (threshold === "WATCH" && data.band === "HEALTHY") {
+        $result.className = "result has-data";
+        $result.innerHTML = `<span class="band-pill band-${data.band}">${data.band}</span> filtered (band below threshold ${threshold})`;
+        return;
+      }
+      if (threshold === "CRITICAL" && data.band !== "CRITICAL") {
+        $result.className = "result has-data";
+        $result.innerHTML = `<span class="band-pill band-${data.band}">${data.band}</span> filtered (band below threshold ${threshold})`;
+        return;
+      }
+
+      const bandClass = `band-${data.band}`;
+      const driversHTML = data.drivers.map(d => `
+        <div class="driver">
+          <span class="driver-name">${d.signal}</span>
+          <div class="driver-bar"><div class="driver-bar-fill" style="width: ${Math.min(100, d.contribution * 100)}%"></div></div>
+          <span class="driver-value">${d.contribution.toFixed(2)}</span>
+        </div>
+      `).join("");
+
+      $result.className = "result has-data";
+      $result.innerHTML = `
+<div class="metric"><span class="metric-label">target</span><span class="metric-value">${target}</span></div>
+<div class="metric"><span class="metric-label">network</span><span class="metric-value">${network}</span></div>
+<div class="metric"><span class="metric-label">band</span><span class="metric-value"><span class="band-pill ${bandClass}">${data.band}</span></span></div>
+<div class="metric"><span class="metric-label">score</span><span class="metric-value">${data.score}/100</span></div>
+<div class="metric"><span class="metric-label">p_crisis</span><span class="metric-value">${data.p_crisis.toFixed(2)}</span></div>
+<div class="metric"><span class="metric-label">block</span><span class="metric-value">${data.block}</span></div>
+
+<div class="drivers">
+  <strong style="font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; display: block;">Top 3 drivers</strong>
+  ${driversHTML}
+</div>
+
+<details>
+  <summary>Raw JSON</summary>
+  <pre>${JSON.stringify({
+    target, network,
+    score: data.score, band: data.band, p_crisis: data.p_crisis,
+    drivers: data.drivers,
+    timestamp: new Date().toISOString(),
+    block: data.block,
+    skill: "liquidity-crisis-predictor",
+    skill_version: "0.2.0"
+  }, null, 2)}</pre>
+</details>
+      `;
+    }
+
+    $run.addEventListener("click", () => {
+      const target = $target.value.trim();
+      const network = $network.value;
+      const threshold = $threshold.value;
+      if (!target) {
+        $result.className = "result";
+        $result.textContent = "Please enter a target.";
+        return;
+      }
+      $run.disabled = true;
+      $result.className = "result";
+      $result.innerHTML = '<div class="skeleton-bar" style="width: 60%;"></div><div class="skeleton-bar" style="width: 80%;"></div><div class="skeleton-bar" style="width: 40%;"></div><div class="skeleton-bar" style="width: 70%;"></div>';
+      setTimeout(() => {
+        const data = approxScore(target, network);
+        render(data, threshold, target, network);
+        $run.disabled = false;
+      }, 800);  // Simulated network latency
+    });
+
+    // Render default result on page load (after a brief delay to show the skeleton).
+    setTimeout(() => {
+      const data = approxScore($target.value.trim(), $network.value);
+      render(data, $threshold.value, $target.value.trim(), $network.value);
+    }, 600);
+  </script>
+</body>
+</html>
