@@ -157,6 +157,12 @@ zip -r lcp-riskguard-agent.zip lcp-riskguard-agent/
 - This Agent: `https://github.com/networkbike/lcp-riskguard-agent`
 - Skill used: `https://github.com/networkbike/LCP` (Phase 1 winner)
 
+## Submission materials (Phase 2 Agent Arena)
+
+- **Demo video script:** `references/demo-video-script.md` (5 scenes, ~2 min)
+- **Agent Card fields:** `references/agent-card.md` (all 8 fields pre-filled)
+- **Submission prep:** `references/phase2-submission-prep.md` (copy-paste ready)
+
 ## License
 
 MIT
