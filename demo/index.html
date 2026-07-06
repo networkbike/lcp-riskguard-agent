@@ -50,6 +50,16 @@
       color: var(--muted);
       background: var(--panel);
     }
+    .badge.agent-arena {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: rgba(20, 184, 166, 0.08);
+    }
+    .badge.anvita {
+      border-color: var(--yellow);
+      color: var(--yellow);
+      background: rgba(234, 179, 8, 0.08);
+    }
     .live {
       display: flex; align-items: center; gap: 6px;
       color: var(--green);
@@ -195,8 +205,13 @@
         <span class="badge">Foundry 1.7.1</span>
         <span class="badge">Pharos 1672 + 688689</span>
         <span class="badge">Read-only</span>
+        <span class="badge anvita">Anvita Flow</span>
+        <span class="badge agent-arena">Agent Arena · Phase 2</span>
         <span class="badge live">Live demo</span>
       </div>
+      <p style="color: var(--muted); font-size: 0.9rem; max-width: 720px; margin: 24px auto 0; text-align: center;">
+        🎯 <strong>Service Agent for the Pharos Agent Arena.</strong> Wraps the <code>liquidity-crisis-predictor</code> Skill (which won Phase 1 of the Skill-to-Agent Dual Cascade Hackathon) and exposes it as a discoverable, callable, deterministic liquidity-stress monitor on the Anvita Flow Marketplace. Pricing: Free during the Anvita payment beta.
+      </p>
     </header>
 
     <div class="grid">
@@ -227,13 +242,16 @@
 
         <details>
           <summary>How this works</summary>
-          <pre>This UI calls the same runner you'd invoke from a terminal:
+          <pre>This UI shows what the Service Agent's runner emits for a given
+target, network, and threshold. The real Service Agent on Anvita Flow
+calls the same Skill via cast / forge against Pharos mainnet RPCs.
+
+You'd invoke the real Agent from a terminal like this:
   LCP_TARGET=&lt;target&gt; LCP_NETWORK=&lt;network&gt; LCP_THRESHOLD=&lt;threshold&gt; bash scripts/run.sh
 
-The runner is hosted in this static page. We make a fetch() call
-to a public Pharos RPC for the live signals and the LCP math is
-re-implemented in JS for the demo. The "real" Agent on Anvita Flow
-calls the same Skill via cast / forge.</pre>
+Or via a Steward Agent in Anvita On (Phase 2 Agent Arena launch: Jul 10, 2026).
+This static page cannot make cast calls from the browser (CORS), so it
+approximates the math for demonstration purposes only.</pre>
         </details>
       </div>
 
@@ -273,7 +291,7 @@ calls the same Skill via cast / forge.</pre>
       <div class="feature">
         <div class="feature-icon">📞</div>
         <div class="feature-title">Free during beta</div>
-        <div class="feature-desc">No payment module yet. The Agent is free on Anvita Flow while the pricing beta runs.</div>
+        <div class="feature-desc">Anvita Flow's x402 payment module is in beta. The Agent is free until the official pricing rollout to avoid call failures.</div>
       </div>
     </div>
 
