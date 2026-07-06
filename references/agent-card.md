@@ -13,8 +13,7 @@ LCP RiskGuard
 ## One-sentence introduction
 
 ```
-Read-only liquidity-stress monitoring for any Pharos token, pool, or
-native asset — deterministic, wallet-free, alert-ready.
+Read-only liquidity-stress monitoring for any Pharos token, pool, or native asset — deterministic, wallet-free, alert-ready.
 ```
 
 ## Capability description
