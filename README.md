@@ -173,7 +173,14 @@ zip -r lcp-riskguard-agent.zip lcp-riskguard-agent/
 - `SECURITY.md` — read-only guarantees, threat model, audit posture
 - `CHANGELOG.md` — version history (Keep a Changelog format)
 - `FAQ.md` — anticipated questions from judges, Anvita reviewers, users
+- `CODE_OF_CONDUCT.md` — Contributor Covenant 2.1 + finance-norms
+- `CONTRIBUTING.md` — how to report issues, PR conventions, scope
+- `LICENSE` (MIT)
 - `scripts/self-test.sh` — offline runner validation (8 checks, no RPC)
+- `references/glossary.md` — Pharos / Web3 / LCP terminology
+- `references/troubleshooting.md` — common errors + fixes
+- `references/architecture-decision-record.md` — 5 ADRs
+- `references/composability-roadmap.md` — future Skills and Agents
 
 ## License
 
