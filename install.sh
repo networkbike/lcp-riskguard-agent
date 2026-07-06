@@ -50,6 +50,27 @@ else
   warn "self-test reported failures; see $HOME/.lcp-riskguard-selftest.log"
 fi
 
+# --- 2c. Run the forge test suite (if forge is installed) -----------
+log "  running forge test -vvv (LCP RiskGuard runner output-shape tests)"
+if command -v forge >/dev/null 2>&1; then
+  if [ ! -d "$SCRIPT_DIR/lib/forge-std" ]; then
+    log "    cloning forge-std into lib/forge-std"
+    (cd "$SCRIPT_DIR" && git clone --depth 1 https://github.com/foundry-rs/forge-std.git lib/forge-std) >/dev/null 2>&1 || true
+  fi
+  # Regenerate fixtures before testing (so the test verifies the
+  # current runner output, not a stale snapshot).
+  bash "$SCRIPT_DIR/test/capture-output.sh" > "$HOME/.lcp-riskguard-capture.log" 2>&1 || true
+  if (cd "$SCRIPT_DIR" && forge test -vvv) > "$HOME/.lcp-riskguard-forge.log" 2>&1; then
+    grep -E "passed|failed" "$HOME/.lcp-riskguard-forge.log" | tail -3 | sed 's/^/    /' >> "$HOME/.lcp-riskguard-forge.log"
+    ok "forge test passed (runner output shape verified)"
+  else
+    warn "forge test failed; see $HOME/.lcp-riskguard-forge.log"
+    tail -20 "$HOME/.lcp-riskguard-forge.log" >&2
+  fi
+else
+  warn "forge not installed; skipping forge test. install Foundry to enable."
+fi
+
 ok "LCP RiskGuard: install + smoke test complete."
 echo ""
 echo "Next steps:"

@@ -1,0 +1,22 @@
+{
+  "score": 18,
+  "band": "HEALTHY",
+  "p_crisis": 0.04,
+  "drivers": [
+    {
+      "signal": "outflow_velocity",
+      "contribution": 0.06
+    },
+    {
+      "signal": "holder_concentration",
+      "contribution": 0.04
+    }
+  ],
+  "target": "native:PROS",
+  "network": "mainnet",
+  "timestamp": "2026-07-06T08:13:28Z",
+  "block": 12345,
+  "skill": "liquidity-crisis-predictor",
+  "skill_version": "0.2.0",
+  "p_crisis_e18": 4e+16
+}

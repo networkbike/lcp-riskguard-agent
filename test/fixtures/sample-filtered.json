@@ -1,0 +1,8 @@
+{
+  "target": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+  "network": "mainnet",
+  "band": "HEALTHY",
+  "filtered": true,
+  "reason": "band below threshold WATCH",
+  "p_crisis_e18": 0
+}

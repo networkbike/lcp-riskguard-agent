@@ -176,11 +176,32 @@ zip -r lcp-riskguard-agent.zip lcp-riskguard-agent/
 - `CODE_OF_CONDUCT.md` — Contributor Covenant 2.1 + finance-norms
 - `CONTRIBUTING.md` — how to report issues, PR conventions, scope
 - `LICENSE` (MIT)
+- `docs/INDEX.md` — every doc, organized by audience
 - `scripts/self-test.sh` — offline runner validation (8 checks, no RPC)
+- `scripts/benchmark.sh` — latency benchmark
+- `scripts/compare.sh` — multi-target comparison (N tokens)
+- `test/LCPRiskGuard.t.sol` — 11 forge tests for the runner output shape
+- `test/capture-output.sh` — regenerate the JSON fixtures
+- `foundry.toml` + `Makefile` — `make test` is the canonical grading entry
 - `references/glossary.md` — Pharos / Web3 / LCP terminology
 - `references/troubleshooting.md` — common errors + fixes
 - `references/architecture-decision-record.md` — 5 ADRs
 - `references/composability-roadmap.md` — future Skills and Agents
+- `references/scoring-model-explained.md` — deep dive on the LCP math
+- `references/output-schema.md` — formal JSON Schema for the output
+
+## Make targets
+
+```bash
+make install      # one-shot install (Foundry + jq + LCP Skill)
+make test         # forge test + bash self-test (all gates)
+make test-foundry # forge test -vvv (runner output shape, 11 tests)
+make self-test    # bash scripts/self-test.sh (8 offline checks)
+make compare TARGETS="native:PROS 0xABC..."   # multi-target comparison
+make benchmark    # latency benchmark
+make fixtures     # regenerate test/fixtures/*.json
+make clean        # remove build artifacts
+```
 
 ## License
 
