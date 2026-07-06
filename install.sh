@@ -20,7 +20,22 @@ ok()  { printf "\033[32m[riskguard]\033[0m %s\n" "$*"; }
 warn(){ printf "\033[33m[riskguard]\033[0m %s\n" "$*"; }
 fail(){ printf "\033[31m[riskguard]\033[0m %s\n" "$*" >&2; exit "${2:-1}"; }
 
-# --- 1. Make sure LCP Skill is installed and tested ----------------
+# --- 0. Self-bootstrap: ensure we are running from a clean clone --
+# If someone ran the agent's own install.sh before (or did a
+# partial clone), $SCRIPT_DIR might be an empty or stale directory.
+# Detect that and offer a fresh clone into a temp location.
+if [[ ! -f "$SCRIPT_DIR/scripts/run.sh" ]] || [[ ! -f "$SCRIPT_DIR/foundry.toml" ]]; then
+  fail "This script must run from inside a fresh clone of lcp-riskguard-agent.
+
+  Run:
+    rm -rf ~/lcp-riskguard-agent
+    git clone https://github.com/networkbike/lcp-riskguard-agent.git
+    cd lcp-riskguard-agent
+    ./install.sh
+
+  (No chmod needed — the file is already executable on main.)" 1
+fi
+
 # --- 0. Termux sanity: ensure foundry is Bionic-compatible ----------
 # On Termux, the foundryup-installed static alpine/arm64 foundry has
 # a TLS segment with 8-byte alignment that Bionic rejects with:
@@ -88,6 +103,14 @@ fi
 log "Step 1/2: making sure LCP Skill (networkbike/LCP) is available"
 if [[ ! -d "$LCP_DIR" ]]; then
   warn "  $LCP_DIR not found; cloning networkbike/LCP"
+  git clone --depth 1 https://github.com/networkbike/LCP.git "$LCP_DIR"
+elif [[ ! -d "$LCP_DIR/.git" ]]; then
+  warn "  $LCP_DIR exists but is not a git repo; wiping and re-cloning"
+  rm -rf "$LCP_DIR"
+  git clone --depth 1 https://github.com/networkbike/LCP.git "$LCP_DIR"
+elif [[ ! -f "$LCP_DIR/foundry.toml" ]] || [[ ! -d "$LCP_DIR/src" ]]; then
+  warn "  $LCP_DIR exists but appears incomplete; wiping and re-cloning"
+  rm -rf "$LCP_DIR"
   git clone --depth 1 https://github.com/networkbike/LCP.git "$LCP_DIR"
 fi
 if [[ ! -d "$LCP_DIR/lib/forge-std" ]]; then

@@ -76,11 +76,28 @@ No re-implementation. No forked math.
 ## Quick start (local smoke test)
 
 ```bash
-git clone https://github.com/networkbike/lcp-riskguard-agent.git
-cd lcp-riskguard-agent
-chmod +x install.sh
+# 1. Bootstrap a clean clone (idempotent; wipes bad partial clones)
+curl -fsSL https://raw.githubusercontent.com/networkbike/lcp-riskguard-agent/main/bootstrap.sh | bash
+
+# 2. Or, if you already have the clone:
+cd ~/lcp-riskguard-agent
+./bootstrap.sh        # only does anything if the clone is broken
+
+# 3. Then run the installer:
 ./install.sh
 ```
+
+If you prefer to skip `bootstrap.sh`:
+
+```bash
+git clone https://github.com/networkbike/lcp-riskguard-agent.git
+cd lcp-riskguard-agent
+./install.sh          # already +x on main
+```
+
+The installer itself fails fast if it can't find its own files —
+useful if a previous partial clone left `~/lcp-riskguard-agent`
+in a broken state.
 
 The installer:
 1. Installs the LCP Skill from `networkbike/LCP` (or uses an
