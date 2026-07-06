@@ -45,6 +45,7 @@ Every document in this repo, organized by audience and purpose.
 | `CODE_OF_CONDUCT.md` | Contributor Covenant + finance norms |
 | `CHANGELOG.md` | Version history (Keep a Changelog format) |
 | `references/output-schema.md` | The output contract (machine-readable) |
+| `references/known-limitations.md` | Transparent list of things the Agent does NOT do |
 | `.github/CI.md` | CI workflow content (held back; PAT is repo-only) |
 | `.github/ISSUE_TEMPLATE/*.md` | Bug + feature request templates |
 | `.github/PULL_REQUEST_TEMPLATE.md` | PR checklist |
@@ -80,6 +81,7 @@ Every document in this repo, organized by audience and purpose.
 | `SKILL.md` | Anvita Flow upload manifest |
 | `Makefile` | `make test`, `make install`, `make compare`, etc. |
 | `foundry.toml` | Forge config for the runner output-shape tests |
+| `RELEASING.md` | Release process, versioning, hotfixes |
 
 ## `scripts/`
 

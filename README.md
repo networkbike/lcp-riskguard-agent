@@ -190,6 +190,30 @@ zip -r lcp-riskguard-agent.zip lcp-riskguard-agent/
 - `references/scoring-model-explained.md` — deep dive on the LCP math
 - `references/output-schema.md` — formal JSON Schema for the output
 
+## Quick start with Make
+
+The fastest way to install + verify everything:
+
+```bash
+git clone https://github.com/networkbike/lcp-riskguard-agent.git
+cd lcp-riskguard-agent
+make install         # clones LCP Skill, installs Foundry, runs all tests
+make test            # re-run tests anytime (forge + bash self-test)
+```
+
+If `make` isn't available, use the underlying scripts directly:
+
+```bash
+./install.sh                                          # full install
+bash scripts/self-test.sh                             # offline runner checks (8)
+forge test -vvv                                       # runner output-shape tests (11)
+LCP_TARGET=native:PROS bash scripts/run.sh           # one-shot invocation
+LCP_TARGET=native:PROS LCP_NETWORK=mainnet bash scripts/run.sh
+bash scripts/compare.sh native:PROS 0xABCDEF...      # multi-target comparison
+bash scripts/benchmark.sh                              # latency benchmark
+bash test/capture-output.sh                           # regenerate test fixtures
+```
+
 ## Make targets
 
 ```bash
