@@ -3,12 +3,13 @@
 A flat checklist for the next 4 days. Everything in this doc is
 something only **you** can do — agent does the rest.
 
-## Status as of Jul 6 ~11:00 UTC
+## Status as of Jul 6 ~12:00 UTC
 
-✅ Repo is comprehensive: 15 commits, ~25 docs, all tests passing
+✅ Repo is comprehensive: 17 commits, ~25 docs, all tests passing
 ✅ Live demo on GitHub Pages: https://networkbike.github.io/lcp-riskguard-agent/
-✅ Install works on Termux: forge test 7/7, runner smoke-tested
+✅ Install works on Termux: forge test 7/7 (Skill side), runner smoke-tested
 ✅ All submission materials pre-written in `references/`
+✅ Pharos announcement received — submission window + form URL coming "next week"
 
 ## Jul 6 (today) — 1 hour
 
@@ -41,9 +42,25 @@ it gives you a 3-day buffer before the submission deadline.
       — if it loads, look for any spec changes that affect
       the upload steps.
 
-## Jul 8 11:00 UTC (7 PM HKT) — 30 min
+## Jul 7 — wait for the submission form URL
 
-The Anvita Flow upload window opens.
+Pharos said: *"We will update every few days about any updates
+or changes and soon share the form where you will need to submit
+it separately. Some basic things like the Github, Video tutorial
+will be needed to be submitted."*
+
+Watch for an announcement on:
+- Pharos Discord `#skill-submission`
+- Dorahacks campaign page
+- Email to you from the Pharos team
+
+Don't try to submit before the form is live.
+
+## Jul 8 11:00 UTC (7 PM HKT) — upload window opens
+
+Pharos explicitly said: *"DO NOT upload agents too early right now.
+We will share the exact timeline for feature readiness with everyone
+next week."* Skill uploads open 7 PM HKT Jul 8 (11:00 UTC).
 
 - [ ] **Open** https://flow.anvita.xyz/service-agents
 - [ ] **Click "Upload Service Agent"**
@@ -52,8 +69,10 @@ The Anvita Flow upload window opens.
 - [ ] **Fill the Agent Card** by pasting from
       [`references/agent-card.md`](references/agent-card.md).
       Eight fields, all pre-written.
-- [ ] **Set price to Free** (per Anvita payment beta guidance).
-- [ ] **Save as draft.** Don't submit yet.
+- [ ] **Set price to Free** (per Anvita payment beta guidance —
+      they said "do not upload too early" because payment module
+      isn't ready yet; setting price to Free avoids call failures).
+- [ ] **Save as draft.** Don't submit for review yet.
 
 ## Jul 8–9 — debug session
 
@@ -79,11 +98,13 @@ The Anvita Flow upload window opens.
       [`references/x-thread.md`](references/x-thread.md)) — tag
       `@Pharos_Network`, `@AnvitaFlow` (if exists), `@DoraHacks`
 
-## Jul 10 10:00 UTC (6 PM HKT) — submission day
+## Jul 10 10:00 UTC (6 PM HKT) — HARD submission deadline
 
-Dorahacks releases the Phase 2 submission form.
+This is when the **submission form closes**. The form itself
+will open "soon" per the Pharos announcement — when it does,
+fill it in.
 
-- [ ] **Open the form** (Dorahacks will email or post the link)
+- [ ] **Open the form** (Pharos / Dorahacks will share the link)
 - [ ] **Paste each field** from
       [`references/dorahacks-form-prefill.md`](references/dorahacks-form-prefill.md)
 - [ ] **Upload the demo video URL** (YouTube link)
