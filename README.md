@@ -31,6 +31,10 @@ for a 30-second pitch and the 5 strongest selling points.
 for a 60-second orientation.
 **If you want everything:** see [`docs/INDEX.md`](docs/INDEX.md).
 
+> 📺 **Live demo:** [https://networkbike.github.io/lcp-riskguard-agent/](https://networkbike.github.io/lcp-riskguard-agent/)
+> — try the form, see the band, see the drivers. (Numbers are
+> approximations; the real LCP math runs in the Anvita runtime.)
+
 ## What it solves
 
 Liquidity crises on DeFi happen fast. By the time a holder sees a
