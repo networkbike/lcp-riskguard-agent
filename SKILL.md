@@ -1,6 +1,6 @@
 ---
 name: lcp-riskguard-agent
-description: A read-only Service Agent that monitors any Pharos token, pool, or native asset for liquidity-stress changes and returns a HEALTHY / WATCH / CRITICAL band with a crisis probability; invoke when a user wants continuous monitoring, threshold-based alerts, or a chat-friendly risk summary for a Pharos address.
+description: Read-only Service Agent that scores any Pharos token, pool, or native asset for liquidity-stress changes and returns a HEALTHY / WATCH / CRITICAL band with a crisis probability.
 version: 0.1.0
 license: MIT
 author: networkbike
