@@ -38,9 +38,17 @@ grep -q "7 passed" "$HOME/.lcp-riskguard-forge.log" \
 
 # --- 2. Smoke-test the runner --------------------------------------
 log "Step 2/2: smoke-testing LCP RiskGuard runner against native:PROS mainnet"
-LCP_TARGET=native:PROS LCP_NETWORK=mainnet LCP_SKILL_DIR="$LCP_DIR" \
+LCP_TARGET=native:PROS LCP_NETWORK=mainnet LCP_THRESHOLD=HEALTHY LCP_SKILL_DIR="$LCP_DIR" \
   "$SCRIPT_DIR/scripts/run.sh" | tee "$HOME/.lcp-riskguard-run.log"
 ok "LCP RiskGuard runner output saved to $HOME/.lcp-riskguard-run.log"
+
+# --- 2b. Run the offline self-test ---------------------------------
+log "  running offline self-test (no RPC required)"
+if "$SCRIPT_DIR/scripts/self-test.sh" > "$HOME/.lcp-riskguard-selftest.log" 2>&1; then
+  ok "self-test passed (8/8 checks)"
+else
+  warn "self-test reported failures; see $HOME/.lcp-riskguard-selftest.log"
+fi
 
 ok "LCP RiskGuard: install + smoke test complete."
 echo ""

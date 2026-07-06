@@ -1,0 +1,35 @@
+# Foundry build artifacts (mirrors .gitignore from networkbike/LCP)
+out/
+cache/
+broadcast/
+
+# LCP / RiskGuard runtime artifacts
+.lcp-*
+*.lcp-*
+
+# Log files
+*.log
+/lcp-riskguard-agent.zip
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python (if anyone adds tooling later)
+__pycache__/
+*.pyc
+
+# Node (if anyone adds tooling later)
+node_modules/
+.npm/
+
+# Build / dist (if anyone adds packaging later)
+dist/
+build/
+*.tar.gz

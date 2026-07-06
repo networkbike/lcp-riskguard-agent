@@ -63,21 +63,44 @@ RAW="$("$LCP_SKILL_DIR/examples/score.sh" "$TARGET" "$NETWORK")" || {
 # Compose the RiskGuard output. Merge the LCP result with the
 # Steward-Agent-facing metadata (timestamp, skill version, threshold).
 TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-BLOCK="$(cast block-number --rpc-url "$(jq -r '.rpcUrl' "$LCP_SKILL_DIR/assets/networks.json" | sed -n "$(jq ".networks | to_entries[] | select(.value.name==\"$NETWORK\") | .key" "$LCP_SKILL_DIR/assets/networks.json" 2>/dev/null || echo 0)p")" 2>/dev/null || echo null)"
+# Look up the RPC URL for the requested network in one jq call.
+RPC_URL="$(jq -r --arg n "$NETWORK" '.networks[] | select(.name == $n) | .rpcUrl' "$LCP_SKILL_DIR/assets/networks.json" 2>/dev/null)"
+# If we found an RPC URL, fetch the current block number. Otherwise
+# leave BLOCK unset so it ends up as null in the JSON.
+if [[ -n "$RPC_URL" ]]; then
+  BLOCK="$(cast block-number --rpc-url "$RPC_URL" 2>/dev/null || echo null)"
+else
+  BLOCK=null
+fi
 
-# Filter: if the band is above the user's threshold (e.g. user asked
-# for `CRITICAL` and we got `WATCH`), return an empty result so the
-# Steward Agent doesn't have to filter.
+# Filter: the threshold is the MINIMUM band to return. Bands are
+# ordered HEALTHY < WATCH < CRITICAL in severity. If the actual
+# band is less severe than the threshold, filter it out.
+#
+#   THRESHOLD=WATCH    → return WATCH or CRITICAL
+#   THRESHOLD=CRITICAL → return CRITICAL only
+#   THRESHOLD=HEALTHY  → return all (default; no filter)
 BAND="$(echo "$RAW" | jq -r '.band')"
 FILTER_OUT=0
 case "$THRESHOLD" in
-  CRITICAL) [[ "$BAND" == "CRITICAL" ]] || FILTER_OUT=1 ;;
-  WATCH)    FILTER_OUT=0 ;;  # always return for WATCH
-  *)        FILTER_OUT=0 ;;
+  CRITICAL)
+    [[ "$BAND" == "CRITICAL" ]] || FILTER_OUT=1
+    ;;
+  WATCH)
+    [[ "$BAND" == "HEALTHY" ]] && FILTER_OUT=1
+    ;;
+  HEALTHY | "")
+    FILTER_OUT=0
+    ;;
+  *)
+    # Unknown threshold: be conservative and don't filter.
+    FILTER_OUT=0
+    ;;
 esac
 
 if [[ $FILTER_OUT -eq 1 ]]; then
-  echo "{\"target\":\"$TARGET\",\"network\":\"$NETWORK\",\"band\":\"$BAND\",\"filtered\":true,\"reason\":\"band above threshold $THRESHOLD\"}"
+  printf '{"target":"%s","network":"%s","band":"%s","filtered":true,"reason":"band below threshold %s"}\n' \
+    "$TARGET" "$NETWORK" "$BAND" "$THRESHOLD"
   exit 0
 fi
 

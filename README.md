@@ -163,6 +163,17 @@ zip -r lcp-riskguard-agent.zip lcp-riskguard-agent/
 - **Agent Card fields:** `references/agent-card.md` (all 8 fields pre-filled)
 - **Submission prep:** `references/phase2-submission-prep.md` (copy-paste ready)
 - **Anvita upload walkthrough:** `references/anvita-upload-walkthrough.md` (step-by-step for Jul 8)
+- **Example outputs:** `references/example-outputs.md` (5 canonical JSON shapes to paste in Deliverables)
+- **Installation flow:** `references/installation-flow.md` (visual architecture diagram for judges)
+- **Safety model:** `references/safety-model.md` (why read-only is the winning move)
+- **Comparison:** `references/comparison.md` (vs pharos-skill-engine, pharos-agent-kit, etc.)
+
+## Repository extras
+
+- `SECURITY.md` — read-only guarantees, threat model, audit posture
+- `CHANGELOG.md` — version history (Keep a Changelog format)
+- `FAQ.md` — anticipated questions from judges, Anvita reviewers, users
+- `scripts/self-test.sh` — offline runner validation (8 checks, no RPC)
 
 ## License
 
