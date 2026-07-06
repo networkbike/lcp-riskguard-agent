@@ -35,6 +35,13 @@ for a 60-second orientation.
 > — try the form, see the band, see the drivers. (Numbers are
 > approximations; the real LCP math runs in the Anvita runtime.)
 
+> 🎯 **Phase 2 — Agent Arena focus.** This Service Agent wraps
+> one Skill (the `liquidity-crisis-predictor`, which won Phase 1
+> of the Skill-to-Agent Dual Cascade Hackathon) and exposes it
+> as a discoverable, callable, deterministic liquidity-stress
+> monitor on the Anvita Flow Marketplace. Pricing: Free during
+> the Anvita payment beta.
+
 ## What it solves
 
 Liquidity crises on DeFi happen fast. By the time a holder sees a

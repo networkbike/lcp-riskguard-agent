@@ -5,6 +5,28 @@ All notable changes to LCP RiskGuard are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- **Phase 2 — Agent Arena focus.** Re-oriented the README, SKILL.md,
+  and references/ for the Agent Arena submission. The Agent wraps
+  one Skill (the `liquidity-crisis-predictor`, which won Phase 1 of
+  the Skill-to-Agent Dual Cascade Hackathon) and exposes it as a
+  discoverable, callable Service Agent on the Anvita Flow Marketplace.
+  The Phase 1 pedigree is preserved as a credibility signal but is no
+  longer the dominant framing.
+
+### Fixed
+
+- `SKILL.md` description field: tightened to one declarative sentence
+  per the docs.pharos.xyz spec.
+- `references/agent-card.md`: the "One-sentence introduction" field is
+  now on a single line so the Anvita form receives it as one string.
+- `CHECKLIST.md`: aligned to the official Phase 2 announcement
+  (no early upload before Jul 8 11:00 UTC; submission form URL
+  TBA).
+
 ## [0.1.0] — 2026-07-06
 
 ### Added
