@@ -162,6 +162,7 @@ zip -r lcp-riskguard-agent.zip lcp-riskguard-agent/
 - **Demo video script:** `references/demo-video-script.md` (5 scenes, ~2 min)
 - **Agent Card fields:** `references/agent-card.md` (all 8 fields pre-filled)
 - **Submission prep:** `references/phase2-submission-prep.md` (copy-paste ready)
+- **Anvita upload walkthrough:** `references/anvita-upload-walkthrough.md` (step-by-step for Jul 8)
 
 ## License
 

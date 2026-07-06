@@ -1,15 +1,6 @@
 ---
 name: lcp-riskguard-agent
-description: >
-  A read-only Service Agent that monitors an ERC-20 token, DEX pool, or
-  native asset on Pharos for liquidity-stress changes. Invoke whenever
-  the user wants continuous monitoring, threshold-based alerts, or a
-  chat-friendly summary of liquidity risk for a Pharos address.
-  Built on top of the `liquidity-crisis-predictor` (LCP) Skill
-  (networkbike/LCP); consumes seven on-chain signals and reports a
-  HEALTHY / WATCH / CRITICAL band plus a logistic crisis probability.
-  Free during Anvita Flow pricing beta; never touches a wallet, never
-  signs a transaction.
+description: A read-only Service Agent that monitors any Pharos token, pool, or native asset for liquidity-stress changes and returns a HEALTHY / WATCH / CRITICAL band with a crisis probability; invoke when a user wants continuous monitoring, threshold-based alerts, or a chat-friendly risk summary for a Pharos address.
 version: 0.1.0
 license: MIT
 author: networkbike
