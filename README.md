@@ -42,6 +42,10 @@ for a 60-second orientation.
 > monitor on the Anvita Flow Marketplace. Pricing: Free during
 > the Anvita payment beta.
 
+> 🎥 **Watch the demo (2:00):**
+> [youtube.com/shorts/PVxDwzwWiSE](https://youtube.com/shorts/PVxDwzwWiSE?si=HDGvRA7mK9NzaPDl)
+> — recorded on the user's phone via Termux `screenrecord`.
+
 ## What it solves
 
 Liquidity crises on DeFi happen fast. By the time a holder sees a

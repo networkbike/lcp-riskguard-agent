@@ -114,8 +114,12 @@ MIT
 ## Demo video URL
 
 ```
-(YOU fill this in after recording per references/demo-video-script.md)
+https://youtube.com/shorts/PVxDwzwWiSE?si=HDGvRA7mK9NzaPDl
 ```
+
+(Recorded on the user's phone via Termux `screenrecord`, 2026-07-08.
+Format: YouTube Shorts, vertical. Title: "LCP RiskGuard — Pharos
+liquidity-stress monitor (Agent Arena Phase 2)".)
 
 ## GitHub repo URL
 
