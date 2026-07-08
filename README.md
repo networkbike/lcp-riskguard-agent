@@ -46,6 +46,13 @@ for a 60-second orientation.
 > [youtube.com/shorts/PVxDwzwWiSE](https://youtube.com/shorts/PVxDwzwWiSE?si=HDGvRA7mK9NzaPDl)
 > — recorded on the user's phone via Termux `screenrecord`.
 
+> 🛡️ **Runtime model: cast + forge only.** The runner is a small
+> bash wrapper (~85 lines) that exclusively invokes Foundry's
+> `cast` and `forge` binaries for all on-chain work. No curl,
+> no JSON-RPC workarounds, no Node.js, no Python. See
+> [`references/cast-forge-compliance.md`](references/cast-forge-compliance.md)
+> for the full audit.
+
 ## What it solves
 
 Liquidity crises on DeFi happen fast. By the time a holder sees a

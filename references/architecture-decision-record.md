@@ -12,6 +12,13 @@ ADR format adapted from Michael Nygard's
 **Date:** 2026-07-05
 **Status:** Accepted
 
+> **Quick read for reviewers:** the runner is a thin bash wrapper.
+> All on-chain work goes through `cast` and `forge` underneath;
+> bash exists for input validation and JSON composition. No
+> direct curl/JSON-RPC workarounds. See
+> [`cast-forge-compliance.md`](cast-forge-compliance.md) for the
+> full audit.
+
 ### Context
 
 LCP RiskGuard needs a thin wrapper around the LCP CLI. The wrapper
@@ -19,7 +26,7 @@ must:
 
 1. Accept inputs (target, network, threshold, drivers flag) from
    the Anvita Flow runtime as environment variables.
-2. Invoke the LCP CLI.
+2. Invoke the LCP CLI (which uses `cast` and `forge` internally).
 3. Filter / reformat the result.
 4. Emit JSON on stdout.
 

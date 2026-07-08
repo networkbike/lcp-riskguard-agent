@@ -41,6 +41,7 @@ Every document in this repo, organized by audience and purpose.
 |---|---|
 | `SECURITY.md` | Read-only guarantees, threat model, audit posture |
 | `references/architecture-decision-record.md` | 5 ADRs explaining the major choices |
+| `references/cast-forge-compliance.md` | Cast/forge-only audit; addresses the "no bash" reviewer concern |
 | `CONTRIBUTING.md` | How to contribute |
 | `CODE_OF_CONDUCT.md` | Contributor Covenant + finance norms |
 | `CHANGELOG.md` | Version history (Keep a Changelog format) |
